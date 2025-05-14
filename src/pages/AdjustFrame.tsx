@@ -21,7 +21,7 @@ export default function AdjustFrame() {
 
   const [selected, setSelected] = useState<number | null>(null);
   const photoRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const frameUrl = "/public/frame/frame-1.png";
+  const frameUrl = "/public/frame/frame-3.png";
   const [orientation, setOrientation] = useState<"portrait" | "landscape">(
     "portrait"
   );

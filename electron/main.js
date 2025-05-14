@@ -57,12 +57,13 @@ ipcMain.handle("silent-print", async (event, imageUrl, orientation) => {
       printed = true;
 
       const printOptions = {
-        silent: false,
+        silent: true,
         printBackground: true,
         pageSize: {
-          width: 157000,
-          height: 178000,
+          width: 172000,
+          height: 151000,
         },
+        // paeSize: "4x6",
         margins: { top: 0, left: 0, right: 0, bottom: 0 },
       };
 
@@ -87,20 +88,27 @@ ipcMain.handle("silent-print", async (event, imageUrl, orientation) => {
       <title>Silent Print</title>
       <style>
         body, html {
-          margin: 0;
-          padding: 0;
+          margin: 0 !important;
+          padding: 0 !important;
           width: 100%;
           height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          background-color: red;
         }
         img {
           max-width: 100%;
           max-height: 100%;
-          margin-top: -100px;
-          
+          margin-top: -78px;
+          // margin-right: -300px !important;
+          transform: rotate(90deg);
+          background-color: blue;
+          margin-left: 78px;          
         }
+
+        @page {
+          margin: 0 !important;
+          size: auto;
+        }
+
       </style>
     </head>
     <body>

@@ -22,14 +22,18 @@ export default function Camera() {
   const [capturedVideo, setCapturedVideo] = useState<string>("");
   const [loadingVideo, setLoadingVideo] = useState<boolean>(false);
   const [videoDevices, setVideoDevices] = useState<MediaDeviceInfo[]>([]);
+  // Tambahan state
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string | undefined>(
+    undefined
+  );
 
   useEffect(() => {
-    const initializeCamera = async () => {
+    const initializeCamera = async (deviceId?: string) => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
+          video: deviceId ? { deviceId: { exact: deviceId } } : true,
         });
-        console.log(stream);
+
         if (videoRef.current) videoRef.current.srcObject = stream;
 
         const recorder = new MediaRecorder(stream);
@@ -43,9 +47,9 @@ export default function Camera() {
       }
     };
 
-    initializeCamera();
+    initializeCamera(selectedDeviceId);
     return () => stopCamera();
-  }, []);
+  }, [selectedDeviceId]);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -165,6 +169,10 @@ export default function Camera() {
     return () => stopCamera();
   }, []);
 
+  const handleDeviceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDeviceId(e.target.value);
+  };
+
   console.log(videoDevices);
 
   return (
@@ -173,6 +181,26 @@ export default function Camera() {
         <div className="text-lg font-medium">
           Sesi {currentSession + 1} dari 4
         </div>
+
+        {videoDevices.length > 1 && (
+          <div className="mb-4">
+            <label htmlFor="cameraSelect" className="block mb-1 font-medium">
+              Pilih Kamera:
+            </label>
+            <select
+              id="cameraSelect"
+              onChange={handleDeviceChange}
+              value={selectedDeviceId}
+              className="border border-gray-300 rounded px-2 py-1"
+            >
+              {videoDevices.map((device) => (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label || `Kamera ${device.deviceId}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {!sessionActive && !capturedPhoto && (
           <Button onClick={handleStartSession}>Mulai Sesi Pertama</Button>
